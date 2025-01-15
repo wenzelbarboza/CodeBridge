@@ -58,3 +58,30 @@
     --chart-5: 340 75% 55%;
   }
 }
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px; /* Width of the scrollbar */
+    height: 10px; /* Height of the scrollbar for horizontal scrolling */
+
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Background of the scrollbar track */
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+    border: 2px solid transparent; /* Optional: Space between the thumb and the track */
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Darker color on hover */
+  }
+}
+
+/* .codemirror{
+  height: 100% !important
+} */
+.CodeMirror {
+
+  height: 100% !important
+}

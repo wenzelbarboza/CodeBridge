@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import Editor from "./pages/Editor";
+import EditorPage from "./pages/EditorPage";
 import Home from "./pages/Home";
 import { Toaster } from "./components/ui/toaster";
 
@@ -11,7 +11,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/editor/:id" element={<Editor />} />
+              <Route path="/editor/:id" element={<EditorPage />} />
             </Routes>
           </BrowserRouter>
           <Toaster />

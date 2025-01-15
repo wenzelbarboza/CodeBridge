@@ -9,7 +9,7 @@ import {
 import { Input } from "../components/ui/input";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
-import { toast, useToast } from "../hooks/use-toast";
+import { useToast } from "../hooks/use-toast";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -33,6 +33,7 @@ const Home = () => {
     }));
   };
 
+  // enter into the editor page
   const handleEnterRoom = async () => {
     if (!formData.roomID || !formData.userName) {
       setFormError("All fields are required!!");
@@ -47,6 +48,7 @@ const Home = () => {
     navigate(`editor/${formData.roomID}#${formData.userName}`);
   };
 
+  // generate id for the new room
   const handleCreateRoom = () => {
     setFormData((prev) => ({
       ...prev,
