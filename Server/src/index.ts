@@ -1,16 +1,34 @@
-import WebSocket from "ws";
+import express from "express";
+import http from "http";
+import { WebSocketServer, WebSocket as WS } from "ws";
 
-const wss = new WebSocket.Server({ port: 8080 });
+const app = express();
 
-wss.on("connection", (ws: WebSocket) => {
-  console.log("New client connected");
+const server = http.createServer(app);
+
+const wss = new WebSocketServer({ server });
+
+wss.on("connection", (ws: WS) => {
+  console.log("New WebSocket connection established");
 
   ws.on("message", (message: string) => {
-    console.log(`Received message: ${message}`);
-    ws.send(`Server received your message: ${message}`);
+    console.log(`Received: ${message}`);
+
+    wss.clients.forEach((client) => {
+      if (client.readyState === WS.OPEN) {
+        client.send(message);
+      }
+    });
   });
 
   ws.on("close", () => {
-    console.log("Client disconnected");
+    console.log("WebSocket connection closed");
   });
+
+  ws.send("Welcome to the WebSocket server!");
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
