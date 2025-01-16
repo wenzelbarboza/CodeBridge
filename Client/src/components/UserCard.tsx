@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 
 type Props = { socketId: number; userName: string };
 
-const UserCard = ({ socketId, userName }: Props) => {
+const UserCard = ({ userName }: Props) => {
   return (
     <>
       <div className="flex items-center gap-2">

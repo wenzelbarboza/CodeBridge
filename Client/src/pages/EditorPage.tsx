@@ -8,7 +8,8 @@ const EditorPage = () => {
   const { id } = useParams();
   console.log("params is: ", id);
 
-  const [users, setUsers] = useState([
+  // const [users, setUsers] = useState([
+  const [users] = useState([
     {
       socketId: 1,
       userName: "hello",
