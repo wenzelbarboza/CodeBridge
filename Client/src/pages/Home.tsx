@@ -45,7 +45,7 @@ const Home = () => {
       description: "✅ Room created successfully",
     });
 
-    navigate(`editor/${formData.roomID}#${formData.userName}`);
+    navigate(`editor/${formData.roomID}/${formData.userName}`);
   };
 
   // generate id for the new room

@@ -1,12 +1,13 @@
-import { useParams } from "react-router";
+import { redirect, useParams } from "react-router";
 import { Button } from "../components/ui/button";
 import UserCard from "../components/UserCard";
 import { useState } from "react";
 import Editor from "../components/Editor";
 
 const EditorPage = () => {
-  const { id } = useParams();
-  console.log("params is: ", id);
+  const { id, name } = useParams();
+  console.log("id is: ", id);
+  console.log("name is: ", name);
 
   // const [users, setUsers] = useState([
   const [users] = useState([
@@ -27,6 +28,13 @@ const EditorPage = () => {
       userName: "hello4",
     },
   ]);
+
+  //TODO
+  // make it single line
+  if (!id || !name) {
+    console.log("missing name or id");
+    return redirect("/");
+  }
 
   return (
     <>
@@ -72,7 +80,7 @@ const EditorPage = () => {
         </aside>
 
         <main className="bg-blue-600 flex-1 flex max-h-screen ">
-          <Editor />
+          <Editor id={id} name={name} />
         </main>
       </div>
     </>

@@ -5,17 +5,32 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useToast } from "../hooks/use-toast";
 
+type Props = {
+  id: string;
+  name: string;
+};
+
 const languageExtensions = {
   js: javascript(),
 };
 
-const Editor = () => {
+const Editor = ({ name, id }: Props) => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const WS_CONNECT_URL = `ws://localhost:3000`;
 
-  const { sendJsonMessage, readyState } = useWebSocket(WS_CONNECT_URL);
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
+    WS_CONNECT_URL,
+    {
+      queryParams: {
+        name,
+        id,
+      },
+    }
+  );
+
+  if (lastJsonMessage) console.log(lastJsonMessage);
 
   const onChangeHandler = (value: string) => {
     sendJsonMessage(value);
