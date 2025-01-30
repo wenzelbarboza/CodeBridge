@@ -7,4 +7,8 @@ export type setMap<T> = {
   [id: string]: Set<T>;
 };
 
+export type Code = {
+  [id: string]: string;
+};
+
 export const messageSchema = z.object({});

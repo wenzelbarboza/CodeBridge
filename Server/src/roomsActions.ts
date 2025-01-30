@@ -1,49 +1,52 @@
 import { WebSocket as WS } from "ws";
-import { rooms, users } from ".";
+import { code, rooms, users } from ".";
 
-export const joinRoom = (roomName: string, ws: WS, userName: string) => {
-  if (!users[roomName]) {
-    users[roomName] = new Set();
+export const joinRoom = (rooomId: string, ws: WS, userName: string) => {
+  if (!users[rooomId]) {
+    users[rooomId] = new Set();
   }
 
-  if (!rooms[roomName]) {
-    rooms[roomName] = new Set();
+  if (!code[rooomId]) code[rooomId] = "";
+
+  if (!rooms[rooomId]) {
+    rooms[rooomId] = new Set();
   }
   console.log("name: ", userName);
 
-  users[roomName].add(userName);
-  rooms[roomName].add(ws);
+  users[rooomId].add(userName);
+  rooms[rooomId].add(ws);
 
   console.log("users List:", users);
 };
 
-export const leaveRoom = (roomName: string, ws: WS, userName: string) => {
-  if (roomName && rooms[roomName]) {
-    rooms[roomName].delete(ws);
+export const leaveRoom = (rooomId: string, ws: WS, userName: string) => {
+  if (rooomId && rooms[rooomId]) {
+    rooms[rooomId].delete(ws);
 
-    if (rooms[roomName].size == 0) {
-      delete rooms[roomName];
+    if (rooms[rooomId].size == 0) {
+      delete rooms[rooomId];
     }
   }
 
-  if (userName && users[roomName]) {
-    users[roomName].delete(userName);
+  if (userName && users[rooomId]) {
+    users[rooomId].delete(userName);
 
-    if (users[roomName].size == 0) {
-      delete users[roomName];
+    if (users[rooomId].size == 0) {
+      delete users[rooomId];
+      delete code[rooomId];
     }
   }
 };
 
 export const broadcastToRooms = (
-  roomName: string,
+  rooomId: string,
   message: string,
   sender: WS,
   senderName: string
 ) => {
-  if (!rooms[roomName]) return;
+  if (!rooms[rooomId]) return;
 
-  rooms[roomName].forEach((client) => {
+  rooms[rooomId].forEach((client) => {
     if (client !== sender && client.readyState == client.OPEN) {
       client.send(message);
     }

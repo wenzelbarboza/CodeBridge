@@ -3,7 +3,7 @@ import http from "http";
 import { WebSocketServer, WebSocket as WS } from "ws";
 import { v4 as uuid } from "uuid";
 import { joinRoom, leaveRoom } from "./roomsActions";
-import { setMap } from "./types";
+import { Code, setMap } from "./types";
 
 const app = express();
 app.use(express.urlencoded());
@@ -13,6 +13,7 @@ const wss = new WebSocketServer({ server });
 export const rooms: setMap<WS> = {};
 let len = 0;
 export const users: setMap<string> = {};
+export const code: Code = {};
 
 wss.on("connection", (ws: WS, request: any) => {
   console.log("New WebSocket connection established");
@@ -36,9 +37,9 @@ wss.on("connection", (ws: WS, request: any) => {
 
   joinRoom(roomId, ws, name);
 
-  // notify about newuser
+  // notify about newuser to the room
   const userNames = Array.from(users[roomId]);
-  wss.clients.forEach((client) => {
+  rooms[roomId].forEach((client) => {
     if (client.readyState == WS.OPEN && client !== ws) {
       const message = {
         type: "USER_UPDATE",
@@ -49,20 +50,23 @@ wss.on("connection", (ws: WS, request: any) => {
       client.send(JSON.stringify(message));
     }
   });
+  // wss.clients.forEach((client) => {
+  // });
 
   ws.on("message", (message: string) => {
     console.log(`Received: ${message}`);
     console.log("id on message is: ", wsId);
+    code[roomId] = message;
 
     if (message)
-      wss.clients.forEach((client) => {
-        if (client.readyState === WS.OPEN) {
-          // test --
-          console.log("no of users are: ", len);
-          console.log("users in server are: ", JSON.stringify(users));
-          console.log("\n\n");
-          // -----
-          client.send(message);
+      rooms[roomId].forEach((client) => {
+        if (client !== ws && client.readyState === WS.OPEN) {
+          const message = {
+            type: "CODE_UPDATE",
+            updatingUser: name,
+            code: code[roomId],
+          };
+          client.send(JSON.stringify(message));
         }
       });
   });
@@ -73,7 +77,7 @@ wss.on("connection", (ws: WS, request: any) => {
     // leaveRoom(roomId, ws, `name${len}`);
     leaveRoom("room1", ws, name);
     const userNames = users[roomId];
-    wss.clients.forEach((client) => {
+    rooms[roomId].forEach((client) => {
       if (client.readyState == WS.OPEN && client !== ws) {
         const message = {
           type: "USER_UPDATE",
@@ -87,7 +91,15 @@ wss.on("connection", (ws: WS, request: any) => {
     console.log("WebSocket connection closed");
   });
 
-  ws.send("Welcome to the WebSocket server!");
+  const message = code[roomId]
+    ? {
+        type: "CODE_UPDATE",
+        updatingUser: "room",
+        code: code[roomId],
+      }
+    : "Welcome to the ws server!";
+
+  ws.send(JSON.stringify(message));
 });
 
 const PORT = 3000;
