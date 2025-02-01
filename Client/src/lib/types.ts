@@ -9,4 +9,8 @@ export type Message =
       type: "CODE_UPDATE";
       updatingUser: string;
       code: string;
+    }
+  | {
+      type: "WELCOME";
+      message: string;
     };

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
-type Props = { socketId: number; userName: string };
+type Props = { userName: string };
 
 const UserCard = ({ userName }: Props) => {
   return (
