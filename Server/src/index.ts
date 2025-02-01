@@ -40,7 +40,7 @@ wss.on("connection", (ws: WS, request: any) => {
   // notify about newuser to the room
   const userNames = Array.from(users[roomId]);
   rooms[roomId].forEach((client) => {
-    if (client.readyState == WS.OPEN && client !== ws) {
+    if (client.readyState == WS.OPEN) {
       const message = {
         type: "USER_UPDATE",
         updateType: "CONNECTED",
@@ -53,10 +53,15 @@ wss.on("connection", (ws: WS, request: any) => {
   // wss.clients.forEach((client) => {
   // });
 
-  ws.on("message", (message: string) => {
+  ws.on("message", (jsonMessage: string) => {
+    const message = JSON.parse(jsonMessage);
+
     console.log(`Received: ${message}`);
     console.log("id on message is: ", wsId);
     code[roomId] = message;
+
+    console.log("received code in message is: ", message);
+    console.log("received code in session memory is: ", code[roomId]);
 
     if (message)
       rooms[roomId].forEach((client) => {
@@ -75,8 +80,8 @@ wss.on("connection", (ws: WS, request: any) => {
     len--;
 
     // leaveRoom(roomId, ws, `name${len}`);
-    leaveRoom("room1", ws, name);
-    const userNames = users[roomId];
+    leaveRoom(roomId, ws, name);
+    const userNames = Array.from(users[roomId]);
     rooms[roomId].forEach((client) => {
       if (client.readyState == WS.OPEN && client !== ws) {
         const message = {
@@ -90,14 +95,16 @@ wss.on("connection", (ws: WS, request: any) => {
     });
     console.log("WebSocket connection closed");
   });
-
   const message = code[roomId]
     ? {
         type: "CODE_UPDATE",
         updatingUser: "room",
         code: code[roomId],
       }
-    : "Welcome to the ws server!";
+    : {
+        type: "WELCOME",
+        message: "Welcome to the ws server!",
+      };
 
   ws.send(JSON.stringify(message));
 });
