@@ -22,7 +22,6 @@ const Editor = ({ name, id, setUser, users }: Props) => {
   const { toast } = useToast();
 
   const [code, setCode] = useState("");
-  // const [userlist, setUserlist] = useState<Array<string | null>>([]);
 
   const WS_CONNECT_URL = `ws://localhost:3000`;
 
@@ -47,21 +46,9 @@ const Editor = ({ name, id, setUser, users }: Props) => {
       : code;
 
   useEffect(() => {
-    // if (wsCode) {
-    //   setCode(wsCode);
-    // }
     setCode(wsCode);
   }, [codeUpdate]);
 
-  // let users = []
-  // if(lastJsonMessage && lastJsonMessage.type == "USER_UPDATE"){
-  //   users = lastJsonMessage.names;
-  // }
-
-  // const userList = useMemo(
-  //   ()=>{},
-  //   [las]
-  // )
   console.log("json message:", lastJsonMessage);
 
   const checkUserlist =
