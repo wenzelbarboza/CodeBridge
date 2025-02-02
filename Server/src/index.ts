@@ -50,8 +50,6 @@ wss.on("connection", (ws: WS, request: any) => {
       client.send(JSON.stringify(message));
     }
   });
-  // wss.clients.forEach((client) => {
-  // });
 
   ws.on("message", (jsonMessage: string) => {
     const message = JSON.parse(jsonMessage);
